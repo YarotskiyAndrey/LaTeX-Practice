@@ -1,0 +1,187 @@
+\documentclass[mathserif,9pt,serif]{beamer}
+\usepackage{beamerthemesplit}
+\usepackage[ukrainian]{babel}
+\usepackage[cp1251]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{afterpage}
+\usepackage{fancybox}
+\usetheme{Warsaw}
+\usepackage{pgfpages}
+
+\setbeamertemplate{headline}%[default]
+{}
+
+
+
+\xdefinecolor{MyGreen-rgb}{rgb}{0,0,0}
+\xdefinecolor{MyGreen}{cmyk}{0,0,0,0}
+
+
+\include{epsfig}
+
+\title{ Побудова апостеріорного оцінювача методом нев'язок}
+\author[Яроцький Андрій]{Курсова робота бакалавра\\Яроцького Андрія}
+\date{Одеса, 2018}
+
+\institute{Науковий керівник: к. фіз.-мат. наук, доцент Вербицький В.В.}
+
+%\pagenumbering{arabic}
+%\pagestyle {plain}
+
+\begin{document}
+
+\section{Title}
+\frame{
+\titlepage
+}
+
+\frame{
+    \frametitle{Постановка задачи}
+   % \centering
+    {
+   Для краевой задачи
+$$-u''(x)+q(x)u(x)=f(x), \quad x\in(a,b),\eqno{(1)}$$
+$$u(a)=0, u(b)=0,\eqno{(2)}$$
+где $q(x)\in C^{0}[a,b], q(x)\geq 0$ необходимо построить конечно-элементную аппроксимацию с использованием линейных непрерывных сплайнов на неравномерной сетке и апостериорный оценщик погрешности полученного решения.
+}
+}
+\frame{
+    \frametitle{Базисные сплайны}
+    %\centering
+    {
+   Определим $S^{1,0}_{w_{h}}[a,b]$ - пространство линейных непрерывных на $[a,b]$ сплайнов, где $w_{h}=\left \{ a=x_{0}, x_{1},...x_{n}=b \right \}$ - сетка, $h-$ шаг разбиения.
+    При этом $\left \{ \varphi_{i}(x) \right \}_{i=0}^{n}$ - базис пространства $S^{1,0}_{w_{h}}[a,b]$.
+$$
+  \varphi_i(x)=\left\{
+                 \begin{array}{lll}
+                  ({x-x_{i-1}})/{h_i},& x\in [x_{i-1},x_i],& \\
+                  - ({x-x_{i+1}})/{h_{i+1}},& x\in [x_{i},x_{i+1}],&\\
+                  0,& x\in [a,b]\backslash[x_{i-1},x_{i+1}],& i=\overline{1,n-1},\\
+                 \end{array}
+               \right.
+$$
+$$
+  \varphi_0(x)=\left\{
+                 \begin{array}{ll}
+                   -({x-x_{1}})/{h_1},& x\in [x_{0},x_{1}], \\
+                   0,& x\in [x_1,b], \\
+                 \end{array}
+                 \right.
+$$
+$$
+  \varphi_n(x)=\left\{
+                 \begin{array}{ll}
+                   ({x-x_{n-1}}){h_n},& x\in [x_{n-1},x_n], \\
+                    0,& x\in [a,x_{n-1}], \\
+                 \end{array}
+                  \right.
+$$
+}
+}
+
+
+\frame{
+    \frametitle{Метод конечных элементов}
+    %\centering
+    {Конечно-элементная аппроксимация краевой задачи (1),(2) сводится к
+    СЛАУ
+    $$
+    Ay=b, \eqno{(3)}
+    $$
+    где
+    $$a_{ii}=a(\varphi _{i}(x),\varphi _{i}(x)), i=\overline{1,n-1},$$
+    $$a_{i,i+1}=a_{i+1,i}=a(\varphi _{i}(x),\varphi _{i+1}(x))\, i=\overline{1,n-2},$$
+    $$b=\left [ hf(x_{1}), hf(x_{2}),...,f(x_{n-1}), f(x_{n})\right ]$$
+    $$
+    y=\left [ \alpha_1,\alpha_2,\cdots, \alpha_{n-1}\right ],
+    $$
+    $$
+    a(u,v)=\int\limits_a^b\alpha(x)u'v'+q(x)uvdx.
+    $$
+Решая СЛАУ (3), получаем приближенное решение задачи (1)-(2) в виде
+$$
+u_h=\sum\limits_{i=1}^{n-1}\alpha_i\varphi_i(x). \eqno{(4)}
+$$
+
+    }
+}
+\frame{
+    \frametitle{Апостериорный оценщик}
+     На каждом конечном элементе (отрезке) $I_i$ погрешность конечно-элементного решения $u_h$
+   можно оценить с  помощью величины
+$$
+  \eta_i=\frac{h_i}{\pi}||(a(x)u_h')'-q(x)u_u+f(x)||_{2,I_i.}
+$$
+Погрешность  конечно-элементного решения  на всем  отрезке $I$ определяется   с помощью глобального оценщика:
+$$
+  \eta=\left(\sum_{i=1}^{N}\eta_i^2\right)^{1/2}.
+$$
+Имеет место следующая оценка:
+$$
+  ||(u-u_h)'||_{2,I}\leq C_0 \eta. \eqno{(5)}
+$$
+}
+
+
+\frame{
+    \frametitle{Вычислительный эксперимент}
+В качестве тестового примера рассматривалась следующая задача Дирихле:
+$$
+-({a(x)u(x)}')'=f(x),\quad x\in (-2,2),
+$$
+$$
+u(-2)=0, u(2)=0,
+$$
+где
+$$
+a(x)=1+x^2
+$$
+и правая часть выбрана так, чтобы точным решением была функция
+$$
+u(x)=e^{x^2}-e^4.
+$$
+}
+
+\frame{
+    \frametitle{Результаты вычислений}
+\begin{figure}[h]
+\center{\includegraphics[scale=0.45]{f1}} \caption{Равномерная сетка с шагом $h=0.2$. }\label{first}
+\end{figure}
+
+}
+\frame{
+    \frametitle{Результаты вычислений}
+\begin{figure}[h]
+\center{\includegraphics[scale=0.45]{f4}} \caption{Третье сгущение сетки}\label{fifth}
+\end{figure}
+
+}
+\frame{
+    \frametitle{Результаты вычислений}
+
+\begin{figure}[h]
+\center{\includegraphics[scale=0.45]{f5}} \caption{Погрешность решения $||(u-u_h)'||_{2,I}$ и апостериорный оценщик $\eta$, вычисленные для различных сеток} \label{fourth}
+\end{figure}
+}
+
+\frame{
+    \frametitle{ЗАКЛЮЧЕНИЕ}
+\begin{itemize}
+  \item Для краевой задачи Дирихле для уравнения второго порядка  построена конечно-элементная аппроксимацию с использованием линейных непрерывных сплайнов на неравномерной сетке.
+  \item Построен апостериорный оценщик погрешности конечно-элементного решения краевой задачи.
+  \item Написано программное приложение на языке пакета MATLAB, которое находит приближенное решение поставленной задачи,   адаптируя сетки к структуре точного решения.
+\end{itemize}
+
+
+
+
+
+}
+
+
+\end{document}
